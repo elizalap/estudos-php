@@ -1,5 +1,7 @@
 @extends('app.layouts.basico')
-@section('title', 'Produto')
-@section('content')
-<br>Produto
+
+@section('titulo', 'Produto')
+
+@section('conteudo')
+    <br><br><br><br>Produto
 @endsection

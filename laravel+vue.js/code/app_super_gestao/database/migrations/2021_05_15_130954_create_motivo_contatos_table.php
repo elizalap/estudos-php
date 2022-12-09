@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\MotivoContato;
 
 class CreateMotivoContatosTable extends Migration
 {
@@ -19,11 +18,7 @@ class CreateMotivoContatosTable extends Migration
             $table->string('motivo_contato', 20);
             $table->timestamps();
         });
-        /*
-        MotivoContato::create(['Dúvida']);
-        MotivoContato::create(['Elogio']);
-        MotivoContato::create(['Reclamação']);
-        */
+
     }
 
     /**

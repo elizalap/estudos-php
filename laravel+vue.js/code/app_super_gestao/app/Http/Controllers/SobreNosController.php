@@ -6,13 +6,11 @@ use Illuminate\Http\Request;
 
 class SobreNosController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('log.acessos');
+    public function __construct() {
+        $this->middleware('log.acesso');
     }
 
-    public function index()
-    {
-        return view('site.sobre-nos', ['title' => 'Sobre Nós']);
+    public function sobreNos() {
+        return view('site.sobre-nos');
     }
 }

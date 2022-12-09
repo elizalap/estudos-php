@@ -16,15 +16,18 @@ class LogAcessoMiddleware
      */
     public function handle($request, Closure $next)
     {
-        //$request - manipular
-        //return $next($request)
 
-        //Recuperar o IP e a rota
         $ip = $request->server->get('REMOTE_ADDR');
         $rota = $request->getRequestUri();
-
         LogAcesso::create(['log' => "IP $ip requisitou a rota $rota"]);
 
-        return $next($request);
+        // return $next($request);
+
+        $resposta = $next($request);
+
+        $resposta->setStatusCode(201, 'O status da resposta e o texto da resposta foram modificados!!!');
+
+        return $resposta;
+
     }
 }

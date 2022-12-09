@@ -1,5 +1,7 @@
 @extends('app.layouts.basico')
-@section('title', 'Home')
-@section('content')
-<br>Home
+
+@section('titulo', 'Home')
+
+@section('conteudo')
+    <br><br><br><br>Home
 @endsection
