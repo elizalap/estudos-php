@@ -40,20 +40,33 @@ class PedidoProdutoController extends Controller
     public function store(Request $request, Pedido $pedido)
     {
         $regras = [
-            'produto_id' => 'exists.produtos,id'
+            'produto_id' => 'exists.produtos,id',
+            'quantidade' => 'required'
         ];
 
         $feedback = [
-            'produto_id.exists' => 'O produto informado não existe'
+            'produto_id.exists' => 'O produto informado não existe',
+            'required' => 'O campo :attribute deve possuir um valor válido'
         ];
 
         $request->validate($regras, $feedback);
-        echo $pedido->id . ' - ' . $request->get('produto_id');
 
+        /*
         $pedidoProduto = new PedidoProduto();
         $pedidoProduto->pedido_id = $pedido->id;
         $pedidoProduto->produto_id = $request->get('produto_id');
         $pedidoProduto->save();
+        */
+
+        //$pedido->produtos //os registros do relacionamento
+        // $pedido->produtos()->attach(
+        //     $request->get('produto_id'),
+        //     ['quantidade' => $request->get('quantidade')]
+        // ); //objeto
+
+        $pedido->produtos()->attach([
+            $request->get('produto_id') => ['quantidade' => $request->get('quantidade')]
+        ]);
 
         return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
     }
@@ -98,8 +111,19 @@ class PedidoProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PedidoProduto $pedidoProduto, $pedido_id)
     {
-        //
+        //convencional
+        // PedidoProduto::where([
+        //     'pedido_id' => $pedido->id,
+        //     'produto_id' => $produto->id
+        // ])->delete();
+
+        //detach (delete pelo relacionamento)
+        //$pedidoProduto->produtos()->detach($produto->id);
+
+        $pedidoProduto->delete();
+
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido_id]);
     }
 }
