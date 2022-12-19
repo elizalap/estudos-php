@@ -15,7 +15,9 @@ class TarefaController extends Controller
      */
     public function index()
     {
-        //
+        $user_id = auth()->user()->id;
+        $tarefas = Tarefa::where('user_id', $user_id)->get();
+        return view('tarefa.index', ['tarefas' => $tarefas]);
     }
 
     /**
@@ -25,7 +27,7 @@ class TarefaController extends Controller
      */
     public function create()
     {
-        //
+        return view('tarefa.create');
     }
 
     /**
@@ -36,7 +38,11 @@ class TarefaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $dados = $request->all('tarefa',  'data_limite_conclusao');
+        $dados['user_id'] = auth()->user()->id;
+
+        $tarefa = Tarefa::Create($dados);
+        return redirect()->route('tarefa.show', ['tarefa' => $tarefa->id]);
     }
 
     /**
@@ -47,7 +53,7 @@ class TarefaController extends Controller
      */
     public function show(Tarefa $tarefa)
     {
-        //
+        return view('tarefa.show', ['tarefa' => $tarefa]);
     }
 
     /**
