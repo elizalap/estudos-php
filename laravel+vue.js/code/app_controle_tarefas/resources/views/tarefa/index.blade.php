@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Tarefas</div>
+                <div class="card-header">Tarefas<a href="{{ route('tarefa.create') }}" class="float-right"> + Criar tarefa</a></div>
 
                 <div class="card-body">
                   <table class="table">
@@ -14,6 +14,8 @@
                          <th scope="col">ID</th>
                          <th scope="col">Tarefa</th>
                          <th scope="col">Data de conclusão</th>
+                         <th></th>
+                         <th></th>
                        </tr>
                      </thead>
                      <tbody>
@@ -22,6 +24,14 @@
                               <th scope="row">{{ $tarefa['id'] }}</th>
                               <td>{{ $tarefa['tarefa'] }}</td>
                               <td>{{ date('d/m/Y', strtotime($tarefa['data_limite_conclusao'])) }}</td>
+                              <td><a href="{{ route('tarefa.edit', $tarefa['id']) }}">Editar</a></td>
+                              <td>
+                                <form method="post" action="{{ route('tarefa.destroy', ['tarefa' => $tarefa->id ]) }}" id="form_{{$tarefa['id']}}">
+                                  @csrf
+                                  @method('DELETE')
+                                  <a href="#" onclick="document.getElementById('form_{{$tarefa['id']}}').submit()">Excluir</a>
+                                </form>
+                              </td>
                            </tr>
                         @endforeach
                      </tbody>
