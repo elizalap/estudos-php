@@ -5,9 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Tarefa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\TarefasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TarefaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -105,6 +112,14 @@ class TarefaController extends Controller
             return view('acesso-negado');
         }
         $tarefa->delete();
+        return redirect()->route('tarefa.index');
+    }
+
+    public function export($extensao)
+    {
+        if (in_array($extensao, ['xlsx', 'csv', 'pdf'])) {
+            return Excel::download(new TarefasExport, 'lista_de_tarefas.' . $extensao);
+        }
         return redirect()->route('tarefa.index');
     }
 }
