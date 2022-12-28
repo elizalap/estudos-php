@@ -14,7 +14,7 @@ class Marca extends Model
     {
         return [
             'nome' => 'required|unique:marcas,nome,' . $this->id . '|min:3',
-            'imagem' => 'required|file|mime:png,jpeg,jpg'
+            'imagem' => 'required|file|mimes:png,jpeg,jpg'
         ];
     }
 

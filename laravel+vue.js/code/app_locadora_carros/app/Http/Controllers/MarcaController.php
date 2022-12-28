@@ -50,11 +50,11 @@ class MarcaController extends Controller
         $imagem = $request->file('imagem');
         $imagem_urn = $imagem->store('imagens', 'public');
 
-
         $marca = $this->marca->create([
             'nome' => $request->nome,
             'imagem' => $imagem_urn
         ]);
+
         return response()->json($marca, 201);
     }
 
@@ -118,8 +118,14 @@ class MarcaController extends Controller
             $request->validate($marca->rules(), $marca->feedback());
         }
 
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens', 'public');
 
-        $marca->update($request->all());
+        $marca->update([
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
+        ]);
+
         return response()->json($marca, 200);
     }
 
