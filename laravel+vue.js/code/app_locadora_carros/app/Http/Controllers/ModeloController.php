@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
-use App\Models\Marca;
+use App\Models\Modelo;
 use Illuminate\Http\Request;
 
-class MarcaController extends Controller
+class ModeloController extends Controller
 {
-    public function __construct(Marca $marca)
+
+    public function __construct(Modelo $modelo)
     {
-        $this->marca = $marca;
+        $this->modelo = $modelo;
     }
 
     /**
@@ -20,9 +21,7 @@ class MarcaController extends Controller
      */
     public function index()
     {
-        //$marcas = Marca::all();
-        $marcas = $this->marca->all();
-        return response()->json($marcas, 200);
+        return response()->json($this->modelo->all(), 200);
     }
 
     /**
@@ -43,44 +42,46 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        //$marca = Marca::create($request->all());
-
-        //Encaminhar o 'accept' no header da requisição!
-        $request->validate($this->marca->rules(), $this->marca->feedback());
+        $request->validate($this->modelo->rules());
 
         $imagem = $request->file('imagem');
-        $imagem_urn = $imagem->store('imagens', 'public');
+        $imagem_urn = $imagem->store('imagens/modelos', 'public');
 
-        $marca = $this->marca->create([
+        $modelo = $this->modelo->create([
+            'marca_id' => $request->marca_id,
             'nome' => $request->nome,
-            'imagem' => $imagem_urn
+            'imagem' => $imagem_urn,
+            'numero_portas' => $request->numero_portas,
+            'lugares' => $request->lugares,
+            'air_bag' => $request->air_bag,
+            'abs' => $request->abs
         ]);
 
-        return response()->json($marca, 201);
+        return response()->json($modelo, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  Integer
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $marca = $this->marca->find($id);
-        if ($marca === null) {
+        $modelo = $this->modelo->find($id);
+        if ($modelo === null) {
             return response()->json(['erro' => 'Recurso pesquisado não existe.'], 404);
         }
-        return response()->json($marca, 201);
+        return response()->json($modelo, 201);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Marca  $marca
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Marca $marca)
+    public function edit($id)
     {
         //
     }
@@ -89,24 +90,22 @@ class MarcaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Integer
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //$marca->update($request->all());
-        $marca = $this->marca->find($id);
+        $modelo = $this->modelo->find($id);
 
-        if ($marca === null) {
+        if ($modelo === null) {
             return response()->json(['erro' => 'Impossível realizar atualização. O recurso solicitado não existe.'], 404);
         }
 
         if ($request->method() === 'PATCH') {
             $regrasDinamicas = array();
-            $teste = '';
 
             //percorrendo todas as regras definidas no Model
-            foreach ($marca->rules() as $input => $regra) {
+            foreach ($modelo->rules() as $input => $regra) {
 
                 //coletar apenas as regras aplicaveis aos parametros parciais da requisição PATCH
                 if (array_key_exists($input, $request->all())) {
@@ -114,45 +113,50 @@ class MarcaController extends Controller
                 }
             }
 
-            $request->validate($regrasDinamicas, $marca->feedback());
+            $request->validate($regrasDinamicas);
         } else {
-            $request->validate($marca->rules(), $marca->feedback());
+            $request->validate($modelo->rules());
         }
 
         //remove o arquivo antigo caso um novo arquivo tenha sido enviado no request
         if ($request->file('imagem')) {
-            Storage::disk('public')->delete($marca->imagem);
+            Storage::disk('public')->delete($modelo->imagem);
         }
 
         $imagem = $request->file('imagem');
-        $imagem_urn = $imagem->store('imagens', 'public');
+        $imagem_urn = $imagem->store('imagens/modelos', 'public');
 
-        $marca->update([
+        $modelo->update([
+            'marca_id' => $request->marca_id,
             'nome' => $request->nome,
-            'imagem' => $imagem_urn
+            'imagem' => $imagem_urn,
+            'numero_portas' => $request->numero_portas,
+            'lugares' => $request->lugares,
+            'air_bag' => $request->air_bag,
+            'abs' => $request->abs
         ]);
 
-        return response()->json($marca, 200);
+        return response()->json($modelo, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Integer
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $marca = $this->marca->find($id);
+        $modelo = $this->modelo->find($id);
 
-        if ($marca === null) {
+        if ($modelo === null) {
             return response()->json(['Impossível realizar a exclusão. O recursos solicitado não existe.'], 404);
         }
 
         //remove o arquivo antigo 
-        Storage::disk('public')->delete($marca->imagem);
+        Storage::disk('public')->delete($modelo->imagem);
 
-        $marca->delete();
-        return response()->json(['msg' => 'A marca foi removida com sucesso.'], 200);
+        $modelo->delete();
+        return response()->json(['msg' => 'O modelo foi removida com sucesso.'], 200);
     }
 }
