@@ -47,7 +47,14 @@ class MarcaController extends Controller
         //Encaminhar o 'accept' no header da requisição!
         $request->validate($this->marca->rules(), $this->marca->feedback());
 
-        $marca = $this->marca->create($request->all());
+        $imagem = $request->file('imagem');
+        $imagem_urn = $imagem->store('imagens', 'public');
+
+
+        $marca = $this->marca->create([
+            'nome' => $request->nome,
+            'imagem' => $imagem_urn
+        ]);
         return response()->json($marca, 201);
     }
 
@@ -93,9 +100,27 @@ class MarcaController extends Controller
             return response()->json(['erro' => 'Impossível realizar atualização. O recurso solicitado não existe.'], 404);
         }
 
-        $request->validate($marca->rules(), $marca->feedback());
+        if ($request->method() === 'PATCH') {
+            $regrasDinamicas = array();
+            $teste = '';
+
+            //percorrendo todas as regras definidas no Model
+            foreach ($marca->rules() as $input => $regra) {
+
+                //coletar apenas as regras aplicaveis aos parametros parciais da requisição PATCH
+                if (array_key_exists($input, $request->all())) {
+                    $regrasDinamicas[$input] = $regra;
+                }
+            }
+
+            $request->validate($regrasDinamicas, $marca->feedback());
+        } else {
+            $request->validate($marca->rules(), $marca->feedback());
+        }
+
+
         $marca->update($request->all());
-        return response()->json($marca, 201);
+        return response()->json($marca, 200);
     }
 
     /**
