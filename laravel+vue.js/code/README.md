@@ -6,9 +6,7 @@ Projetos práticos do curso de Laravel + vueJS
 
 Ideias/melhorias para o projeto:
 
-- [] Alterar o design das páginas do site;
-- [] Alterar o design das páginas do app;
-- [] Página de login para fornecedores;
-- [] Melhorar o design de todas as tabelas;
+- [] Alterar o design das páginas do site e app com Vue
+- [] Fazer páginas responsivas
 
 ### App Controle de Tarefas :construction:
