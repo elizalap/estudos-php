@@ -1,3 +1,6 @@
+@extends('layouts.default')
+
+@section('content')
 <h1>Tarefas</h1>
 
 <form action="{{route('tarefas.index')}}" method="GET">
@@ -30,3 +33,4 @@
       @endforeach
    </tbody>
 </table>
+@endsection
