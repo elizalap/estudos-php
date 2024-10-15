@@ -13,11 +13,11 @@ class EndpointController extends Controller
 {
     public function index(string $siteId)
     {
-        $site = Site::with('endpoints.check')->find($siteId);
+        $site = Site::find($siteId);
         if (!$site) {
             return back();
         }
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
         // if (Gate::allows('owner', $site)) {
         // if (Gate::denies('owner', $site)) {
         //     return back();
@@ -33,14 +33,14 @@ class EndpointController extends Controller
         if (!$site = Site::find($siteId)) {
             return back();
         }
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
 
         return view('admin.endpoints.create', compact('site'));
     }
 
     public function store(StoreUpdateEndpointRequest $request, Site $site)
     {
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
         $site->endpoints()->create($request->all());
 
         return redirect()
@@ -50,13 +50,13 @@ class EndpointController extends Controller
 
     public function edit(Site $site, Endpoint $endpoint)
     {
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
         return view('admin.endpoints.edit', compact('site', 'endpoint'));
     }
 
     public function update(StoreUpdateEndpointRequest $request, Site $site, Endpoint $endpoint)
     {
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
         $endpoint->update($request->validated());
 
         return redirect()
@@ -66,7 +66,7 @@ class EndpointController extends Controller
 
     public function destroy(Site $site, Endpoint $endpoint)
     {
-        $this->authorize('owner', $site);
+        // $this->authorize('owner', $site);
         $endpoint->delete();
 
         return redirect()
