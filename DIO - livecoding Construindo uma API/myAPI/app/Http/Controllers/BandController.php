@@ -44,7 +44,7 @@ class BandController extends Controller
     {
 
         $validate = $request->validate([
-            'name' = 'required'
+            'name' => 'required'
         ]);
 
         return response()->json($request->all());
