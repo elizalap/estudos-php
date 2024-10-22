@@ -30,7 +30,7 @@ class EndpointCheckJob implements ShouldQueue
     public function handle(): void
     {
         $url = $this->endpoint->url();
-        $response = Http::get($url);
+        $response = Http::withoutVerifying()->get($url);
 
         $this->endpoint->checks()->create([
             'status_code' => $response->status(),

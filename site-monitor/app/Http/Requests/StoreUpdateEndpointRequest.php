@@ -26,10 +26,10 @@ class StoreUpdateEndpointRequest extends FormRequest
             'endpoint' => [
                 'required',
                 'max:255',
-                Rule::unique('endpoints')->where('site_id')
+                Rule::unique('endpoints')->where('site_id'),
             ],
             'frequency' => [
-                'required'
+                'required',
             ]
         ];
     }
